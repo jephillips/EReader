@@ -6,18 +6,8 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.os.Bundle;
-
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+
 
 import de.greenrobot.event.EventBus;
 
@@ -25,17 +15,13 @@ public class MainActivity extends Activity {
 
     private ViewPager pager=null;
     private ContentsAdapter adapter=null;
+    private static final String MODEL = "model";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         pager=(ViewPager)findViewById(R.id.pager);
-
-        adapter=new ContentsAdapter(this);
-        pager.setAdapter(adapter);
-        findViewById(R.id.progressBar).setVisibility(View.GONE);
-        pager.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -75,6 +61,17 @@ public class MainActivity extends Activity {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+
+        if (adapter == null) {
+            ModelFragment mfrag =
+                    (ModelFragment)getFragmentManager().findFragmentByTag(MODEL);
+            if (mfrag == null) {
+                getFragmentManager().beginTransaction().add(new ModelFragment(), MODEL).commit();
+            }
+            else if (mfrag.getBook() != null) {
+                setupPager(mfrag.getBook());
+            }
+        }
     }
 
     @Override
@@ -82,4 +79,17 @@ public class MainActivity extends Activity {
         super.onResume();
         EventBus.getDefault().unregister(this);
     }
+
+    public void onEventMainThread(BookLoadedEvent event) {
+        setupPager(event.getBook());
+    }
+
+    private void setupPager(BookContents contents) {
+        adapter = new ContentsAdapter(this, contents);
+        pager.setAdapter(adapter);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+        pager.setVisibility(View.VISIBLE);
+    }
+
+
 }
