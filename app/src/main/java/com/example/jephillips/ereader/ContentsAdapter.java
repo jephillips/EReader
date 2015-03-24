@@ -8,17 +8,21 @@ import android.support.v13.app.FragmentStatePagerAdapter;
  * Created by jephillips on 3/19/15.
  */
 public class ContentsAdapter extends FragmentStatePagerAdapter {
+    private BookContents contents = null;
 
-    public ContentsAdapter(Activity ctxt) {
+    public ContentsAdapter(Activity ctxt, BookContents contents) {
+
         super(ctxt.getFragmentManager());
+        this.contents = contents;
     }
     @Override
-    public Fragment getItem(int i) {
-        return null;
+    public Fragment getItem(int position) {
+        String path = contents.getChapterFile(position);
+        return SimpleContentFragment.newInstance("file:///android_asset/book/" + path) ;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return contents.getChapterCount();
     }
 }

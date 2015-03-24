@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import de.greenrobot.event.EventBus;
+
 public class MainActivity extends Activity {
 
     private ViewPager pager=null;
@@ -67,5 +69,17 @@ public class MainActivity extends Activity {
                 return (true);
         }
         return (super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onResume();
+        EventBus.getDefault().unregister(this);
     }
 }
