@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         pager=(ViewPager)findViewById(R.id.pager);
+        getActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                pager.setCurrentItem(0, false);
                 return (true);
 
             case R.id.about:
