@@ -2,6 +2,7 @@ package com.example.jephillips.ereader;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupStrictMode();
         setContentView(R.layout.activity_main);
         pager=(ViewPager)findViewById(R.id.pager);
         getActionBar().setHomeButtonEnabled(true);
@@ -40,20 +42,19 @@ public class MainActivity extends Activity {
 
             case R.id.about:
                 Intent i = new Intent(this, SimpleContentActivity.class);
-
                 i.putExtra(SimpleContentActivity.EXTRA_FILE,
                         "file:///android_asset/misc/about.html");
                 startActivity(i);
-
                 return (true);
 
             case R.id.help:
                 i = new Intent(this, SimpleContentActivity.class);
-
                 i.putExtra(SimpleContentActivity.EXTRA_FILE,
                         "file:///android_asset/misc/help.html");
                 startActivity(i);
-
+                return (true);
+            case R.id.settings:
+                startActivity(new Intent(this, Preferences.class));
                 return (true);
         }
         return (super.onOptionsItemSelected(item));
@@ -91,6 +92,20 @@ public class MainActivity extends Activity {
         pager.setAdapter(adapter);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
         pager.setVisibility(View.VISIBLE);
+    }
+
+    private void setupStrictMode() {
+        StrictMode.ThreadPolicy.Builder builder =
+                new StrictMode.ThreadPolicy.Builder().detectNetwork();
+
+        if (BuildConfig.DEBUG) {
+            builder.penaltyDeath();
+        }
+        else {
+            builder.penaltyLog();
+        }
+
+        StrictMode.setThreadPolicy(builder.build());
     }
 
 
