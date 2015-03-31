@@ -88,6 +88,11 @@ public class MainActivity extends Activity {
             case R.id.settings:
                 startActivity(new Intent(this, Preferences.class));
                 return(true);
+            case R.id.notes:
+                i = new Intent(this, NoteActivity.class);
+                i.putExtra(NoteActivity.EXTRA_POSITION, pager.getCurrentItem());
+                startActivity(i);
+                return (true);
         }
         return(super.onOptionsItemSelected(item));
     }
