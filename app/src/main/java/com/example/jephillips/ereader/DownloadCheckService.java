@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
 
 public class DownloadCheckService extends IntentService {
@@ -34,7 +35,14 @@ public class DownloadCheckService extends IntentService {
         try {
             String url = getUpdateUrl();
             if (url != null) {
-                //do stuff
+                File book = download(url);
+                File updateDir = new File(getFilesDir(), UPDATE_BASEDIR);
+
+                updateDir.mkdirs();
+                unzip(book, updateDir);
+                book.delete();
+                EventBus.getDefault().post(new BookUpdatedEvent());
+
             }
         }
         catch (Exception e) {
